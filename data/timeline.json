@@ -1,0 +1,32 @@
+[
+    {
+        "date": "2026-05-01",
+        "title": "Project Initialization",
+        "desc": "Created repository, defined architecture, and set up Flet UI structure."
+    },
+    {
+        "date": "2026-05-05",
+        "title": "Navigation & Sidebar",
+        "desc": "Built animated sidebar, page caching, and route navigation for smooth transitions."
+    },
+    {
+        "date": "2026-05-10",
+        "title": "Contact & MATLAB Pages",
+        "desc": "Designed advanced contact layout and added certificate cards for MATLAB content."
+    },
+    {
+        "date": "2026-05-15",
+        "title": "GitHub Evidence Integration",
+        "desc": "Connected live GitHub commit fetching and displayed recent commits as dynamic cards."
+    },
+    {
+        "date": "2026-05-20",
+        "title": "Blog & Timeline Data Wiring",
+        "desc": "Populated JSON data files and wired blog/timeline pages to load content from them."
+    },
+    {
+        "date": "2026-05-25",
+        "title": "Final Polish",
+        "desc": "Refined UI spacing, animations, and content presentation before deployment."
+    }
+]

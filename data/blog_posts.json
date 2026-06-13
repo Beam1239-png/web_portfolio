@@ -1,0 +1,50 @@
+[
+    {
+        "title": "Python Functions & Optimization",
+        "icon": "CODE",
+        "color": "#3B82F6",
+        "formula": "f(x) = sum(cost[i] * weight[i])",
+        "desc": "Functions allow code reuse, improve maintainability, and reduce complexity through modular design patterns.",
+        "concept": "Code Modularity"
+    },
+    {
+        "title": "Data Structures & Complexity",
+        "icon": "STORAGE",
+        "color": "#8B5CF6",
+        "formula": "T(n) = O(n log n) for sorting",
+        "desc": "Understanding data structures helps optimize algorithms and achieve better runtime performance in large-scale applications.",
+        "concept": "Algorithm Efficiency"
+    },
+    {
+        "title": "Machine Learning Basics",
+        "icon": "PSYCHOLOGY",
+        "color": "#EC4899",
+        "formula": "Loss = sum((y_i - y_hat_i)^2) / n",
+        "desc": "ML models learn patterns from data using cost functions. Minimize loss to improve model accuracy and generalization.",
+        "concept": "Neural Networks"
+    },
+    {
+        "title": "Web Development Principles",
+        "icon": "PUBLIC",
+        "color": "#F59E0B",
+        "formula": "Latency = Server + Network + Render",
+        "desc": "Front-end and back-end optimization techniques combine to deliver responsive, scalable web applications.",
+        "concept": "Full Stack Design"
+    },
+    {
+        "title": "Control Systems & Feedback",
+        "icon": "TUNE",
+        "color": "#10B981",
+        "formula": "u(t) = Kp*e(t) + Ki*int(e(t)) + Kd*de/dt",
+        "desc": "PID controllers regulate systems using proportional, integral, and derivative error terms for precise control.",
+        "concept": "Signal Processing"
+    },
+    {
+        "title": "Concurrent Programming",
+        "icon": "FLASH_ON",
+        "color": "#EF4444",
+        "formula": "Speedup = T_sequential / T_parallel",
+        "desc": "Multithreading and async patterns enable efficient resource utilization and responsive applications.",
+        "concept": "Parallelism"
+    }
+]
