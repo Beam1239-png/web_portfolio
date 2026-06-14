@@ -312,12 +312,24 @@ def evidence_gallery(paths):
 
 
 def show_screenshot_dialog(e, image_path):
+    # Determine a safe display name whether image_path is a Path or a URL string
+    try:
+        if isinstance(image_path, str):
+            from urllib.parse import unquote, urlparse
+
+            parsed = urlparse(image_path)
+            display_name = unquote(parsed.path.split("/")[-1]) or image_path
+        else:
+            display_name = getattr(image_path, "name", str(image_path))
+    except Exception:
+        display_name = str(image_path)
+
     dlg = ft.AlertDialog(
         modal=True,
         title=ft.Row(
             [
                 ft.Icon(ft.Icons.IMAGE_SEARCH, color=BLUE, size=22),
-                ft.Text(image_path.name, color=TEXT, size=16, weight=ft.FontWeight.BOLD),
+                ft.Text(display_name, color=TEXT, size=16, weight=ft.FontWeight.BOLD),
             ],
             spacing=8,
         ),
