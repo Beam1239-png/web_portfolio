@@ -250,16 +250,17 @@ def find_commit_screenshots(assets_base):
         key=lambda path: path.name.lower(),
     )
 
-    # If the repo is published to GitHub, prefer serving images from the GitHub raw URL so Flet Web can load them.
-    github_base = "https://github.com/Beam1239-png/web_portfolio/blob/main/assets/github/Commit%20screenshot%20evidence"
-    web_urls = []
-    for p in files:
-        try:
-            web_urls.append(f"{github_base}/{p.name}?raw=1")
-        except Exception:
-            web_urls.append(str(p))
+    # Prefer the raw GitHubusercontent URLs which are ideal for embedding images in web apps.
+    # Use urllib.parse.quote to safely encode file names with spaces or special characters.
+    try:
+        from urllib.parse import quote
 
-    return web_urls
+        github_raw_base = "https://raw.githubusercontent.com/Beam1239-png/web_portfolio/main/assets/github/Commit screenshot evidence"
+        web_urls = [f"{github_raw_base}/{quote(p.name)}" for p in files]
+        return web_urls
+    except Exception:
+        # Fall back to local paths if URL construction fails
+        return [str(p) for p in files]
 
 
 def evidence_gallery(paths):
@@ -521,8 +522,8 @@ def activity_signal(commits, days=14):
 def github_page():
     assets_base = Path(__file__).parent.parent.joinpath("assets", "github")
     commits_graph_path = assets_base.joinpath("commits_graph.png")
-    # Serve PR image via GitHub raw URL so it loads in browsers when deployed
-    pr1 = "https://github.com/Beam1239-png/web_portfolio/blob/main/assets/github/pr1.png?raw=1"
+    # Serve PR image via raw.githubusercontent.com so it reliably embeds in the web app
+    pr1 = "https://raw.githubusercontent.com/Beam1239-png/web_portfolio/main/assets/github/pr1.png"
     commit_screenshots = find_commit_screenshots(assets_base)
 
     recent_commits = _load_github_data(commits_graph_path)
