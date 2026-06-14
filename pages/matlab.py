@@ -130,7 +130,8 @@ def metric(label, value, icon, color=MATLAB_BLUE):
 
 def certificate_card(cert):
     color = cert["color"]
-    file_uri = Path(__file__).parent.parent.joinpath("assets", "matlab", cert["file"]).resolve().as_uri()
+    # Use GitHub-hosted raw file URL instead of local file:// URI so links work when deployed
+    file_uri = f"https://github.com/Beam1239-png/web_portfolio/blob/main/assets/matlab/{cert['file']}?raw=1"
 
     return ft.Card(
         elevation=10,
@@ -223,11 +224,9 @@ def certificate_card(cert):
 
 
 def matlab_page():
-    available = sum(
-        1
-        for cert in CERTIFICATES
-        if Path(__file__).parent.parent.joinpath("assets", "matlab", cert["file"]).exists()
-    )
+    # Count certificates as available (served from GitHub raw URLs in deployment)
+    # Local file existence checks are unreliable on Render; assume uploaded to the repo.
+    available = len(CERTIFICATES)
 
     header = ft.Container(
         bgcolor="#081827",

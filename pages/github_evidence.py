@@ -191,13 +191,26 @@ def _load_github_data(commits_graph_path: Path):
 
 
 def evidence_image(path, fallback_icon, title, caption):
-    if path.exists():
+    # Support both local Path objects and string URLs. If path is a Path and exists locally, use its
+    # string path. Otherwise, if it's a string starting with http(s), use it directly. This avoids
+    # file:// URIs and Windows-specific paths that break when deployed.
+    src = None
+    try:
+        # If a Path is passed
+        if hasattr(path, "exists") and path.exists():
+            src = str(path)
+        elif isinstance(path, str) and (path.startswith("http://") or path.startswith("https://")):
+            src = path
+    except Exception:
+        src = None
+
+    if src:
         return ft.Container(
             bgcolor="#06101C",
             border=box_border("#1E3A53"),
             border_radius=8,
             padding=10,
-            content=ft.Image(src=str(path), fit=ft.BoxFit.CONTAIN),
+            content=ft.Image(src=src, fit=ft.BoxFit.CONTAIN),
         )
 
     return ft.Container(
@@ -227,7 +240,8 @@ def find_commit_screenshots(assets_base):
     if not screenshots_dir.exists():
         return []
 
-    return sorted(
+    # On local dev we can return Path objects; for deployment, convert to GitHub raw URLs
+    files = sorted(
         [
             path
             for path in screenshots_dir.iterdir()
@@ -235,6 +249,17 @@ def find_commit_screenshots(assets_base):
         ],
         key=lambda path: path.name.lower(),
     )
+
+    # If the repo is published to GitHub, prefer serving images from the GitHub raw URL so Flet Web can load them.
+    github_base = "https://github.com/Beam1239-png/web_portfolio/blob/main/assets/github/Commit%20screenshot%20evidence"
+    web_urls = []
+    for p in files:
+        try:
+            web_urls.append(f"{github_base}/{p.name}?raw=1")
+        except Exception:
+            web_urls.append(str(p))
+
+    return web_urls
 
 
 def evidence_gallery(paths):
@@ -245,7 +270,7 @@ def evidence_gallery(paths):
             "Commit image evidence",
             "Place commit screenshots in assets/github/Commit screenshot evidence to display them here.",
         )
-
+    # `paths` can be a list of Path objects (local) or strings (URL). Use the value as the image src.
     return ft.ResponsiveRow(
         [
             ft.Container(
@@ -264,12 +289,12 @@ def evidence_gallery(paths):
                                 bgcolor="#030A12",
                                 border_radius=6,
                                 clip_behavior=ft.ClipBehavior.HARD_EDGE,
-                                content=ft.Image(src=str(path), fit=ft.BoxFit.CONTAIN),
+                                content=ft.Image(src=(str(path) if not isinstance(path, str) else path), fit=ft.BoxFit.CONTAIN),
                             ),
                             ft.Row(
                                 [
                                     ft.Icon(ft.Icons.IMAGE, size=16, color=BLUE),
-                                    ft.Text(path.name, size=11, color=MUTED, expand=True, no_wrap=True),
+                                    ft.Text((path.name if hasattr(path, 'name') else path.split('/')[-1]), size=11, color=MUTED, expand=True, no_wrap=True),
                                     ft.Icon(ft.Icons.ZOOM_IN, size=16, color=BLUE),
                                 ],
                                 spacing=6,
@@ -303,7 +328,7 @@ def show_screenshot_dialog(e, image_path):
             border=box_border("#1E3A53"),
             border_radius=8,
             padding=10,
-            content=ft.Image(src=str(image_path), fit=ft.BoxFit.CONTAIN),
+            content=ft.Image(src=(str(image_path) if not isinstance(image_path, str) else image_path), fit=ft.BoxFit.CONTAIN),
         ),
         actions=[
             ft.TextButton(
@@ -484,7 +509,8 @@ def activity_signal(commits, days=14):
 def github_page():
     assets_base = Path(__file__).parent.parent.joinpath("assets", "github")
     commits_graph_path = assets_base.joinpath("commits_graph.png")
-    pr1 = assets_base.joinpath("pr1.png")
+    # Serve PR image via GitHub raw URL so it loads in browsers when deployed
+    pr1 = "https://github.com/Beam1239-png/web_portfolio/blob/main/assets/github/pr1.png?raw=1"
     commit_screenshots = find_commit_screenshots(assets_base)
 
     recent_commits = _load_github_data(commits_graph_path)
